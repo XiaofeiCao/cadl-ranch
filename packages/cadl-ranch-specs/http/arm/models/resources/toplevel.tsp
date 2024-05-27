@@ -32,142 +32,30 @@ model TopLevelArmResourceProperties {
 }
 
 @armResourceOperations
+@scenario
+@scenarioDoc("""
+Resource Get operation.
+Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
+Expected query parameter: api-version=2023-12-01-preview
+Expected response body:
+```json
+{
+  "id": <any string>,
+  "name": <any string>,
+  "type": <any string>,
+  "description": <any string>,
+  "systemData": <any object>
+}
+```
+""")
 interface TopLevelArmResources {
-  @scenario
-  @scenarioDoc("""
-  Resource Get operation.
-  Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
-  Expected query parameter: api-version=2023-12-01-preview
-  Expected response body:
-  ```json
-  {
-    "id": <any string>,
-    "name": <any string>,
-    "type": <any string>,
-    "description": <any string>,
-    "systemData": <any object>
-  }
-  ```
-  """)
   get is ArmResourceRead<TopLevelArmResource>;
 
-  @scenario
-  @scenarioDoc("""
-  Resource PUT operation.
-  Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
-  Expected query parameter: api-version=2023-12-01-preview
-  Expected request body:
-  ```json
-  {
-    "description": <any string>
-  }
-  ```
-  Expected response body:
-  ```json
-  {
-    "id": <any string>,
-    "name": <any string>,
-    "type": <any string>,
-    "description": <given string in request body>,
-    "systemData": <any object>
-  }
-  ```
-  """)
   createOrReplace is ArmResourceCreateOrReplaceAsync<TopLevelArmResource>;
-
-  @scenario
-  @scenarioDoc("""
-  Resource PATCH operation.
-  Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
-  Expected query parameter: api-version=2023-12-01-preview
-  Expected request body:
-  ```json
-  {
-    "description": <any string>
-  }
-  ```
-  Expected response body:
-  ```json
-  {
-    "id": <any string>,
-    "name": <any string>,
-    "type": <any string>,
-    "description": <given string in request body>,
-    "systemData": <any object>
-  }
-  ```
-  """)
   update is ArmResourcePatchAsync<TopLevelArmResource, TopLevelArmResourceProperties>;
 
-  @scenario
-  @scenarioDoc("""
-  Resource PATCH operation.
-  Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
-  Expected query parameter: api-version=2023-12-01-preview
-  Expected request body:
-  ```json
-  {
-    "description": <any string>
-  }
-  ```
-  Expected response body:
-  ```json
-  {
-    "id": <any string>,
-    "name": <any string>,
-    "type": <any string>,
-    "description": <given string in request body>,
-    "systemData": <any object>
-  }
-  ```
-  """)
   delete is ArmResourceDeleteWithoutOkAsync<TopLevelArmResource>;
 
-  @scenario
-  @scenarioDoc("""
-  Resource PATCH operation.
-  Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
-  Expected query parameter: api-version=2023-12-01-preview
-  Expected request body:
-  ```json
-  {
-    "description": <any string>
-  }
-  ```
-  Expected response body:
-  ```json
-  {
-    "id": <any string>,
-    "name": <any string>,
-    "type": <any string>,
-    "description": <given string in request body>,
-    "systemData": <any object>
-  }
-  ```
-  """)
   listByResourceGroup is ArmResourceListByParent<TopLevelArmResource>;
-
-  @scenario
-  @scenarioDoc("""
-  Resource PATCH operation.
-  Expected resourceId: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Arm.Models.Resources/topLevelArmResources/topLevelResource
-  Expected query parameter: api-version=2023-12-01-preview
-  Expected request body:
-  ```json
-  {
-    "description": <any string>
-  }
-  ```
-  Expected response body:
-  ```json
-  {
-    "id": <any string>,
-    "name": <any string>,
-    "type": <any string>,
-    "description": <given string in request body>,
-    "systemData": <any object>
-  }
-  ```
-  """)
   listBySubscription is ArmListBySubscription<TopLevelArmResource>;
 }
