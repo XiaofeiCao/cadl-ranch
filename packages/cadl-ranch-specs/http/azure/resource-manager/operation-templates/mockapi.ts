@@ -47,7 +47,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_createOrReplace = passOnSuccess([
     response: {
       status: 201,
       headers: {
-        Location: `/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/create_or_replace`,
+        "Azure-AsyncOperation": `/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/create_or_replace`,
       },
       body: json(validLroResource),
     },
@@ -56,13 +56,13 @@ Scenarios.Azure_ResourceManager_Resources_Lro_createOrReplace = passOnSuccess([
       return {
         status: 201,
         headers: {
-          Location: `${req.baseUrl}/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/create_or_replace`,
+          "Azure-AsyncOperation": `${req.baseUrl}/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/create_or_replace`,
         },
         body: json({
           ...validLroResource,
           properties: {
-            provisioningState: "InProgress",
             description: "valid",
+            provisioningState: "InProgress",
           },
         }),
       };
@@ -70,7 +70,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_createOrReplace = passOnSuccess([
     kind: "MockApiDefinition",
   },
   {
-    uri: "/subscriptions/:subscriptionId/resourceGroups/:resourceGroup/providers/operations/create_or_replace",
+    uri: "/subscriptions/:subscriptionId/resourceGroups/:resourceGroup/operations/create_or_replace",
     method: "get",
     request: {
       params: {
@@ -88,7 +88,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_createOrReplace = passOnSuccess([
         createOrReplacePollCount > 0
           ? { id: "create_or_replace", status: "Succeeded" }
           : { id: "create_or_replace", status: "InProgress" };
-      const statusCode = createOrReplacePollCount > 0 ? 202 : 200;
+      const statusCode = createOrReplacePollCount > 0 ? 200 : 202;
       createOrReplacePollCount += 1;
       return {
         status: statusCode,
@@ -104,7 +104,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_createOrReplace = passOnSuccess([
       params: {
         "subscriptionId": SUBSCRIPTION_ID_EXPECTED,
         "resourceGroup": RESOURCE_GROUP_EXPECTED,
-        "topLevelResourceName": "lro",
+        "lroResourceName": "lro",
         "api-version": "2023-12-01-preview",
       },
     },
@@ -119,7 +119,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_createOrReplace = passOnSuccess([
 Scenarios.Azure_ResourceManager_Resources_Lro_delete = passOnSuccess([
   {
     uri: "/subscriptions/:subscriptionId/resourceGroups/:resourceGroup/providers/Azure.ResourceManager.OperationTemplates/lroResources/:lroResourceName",
-    method: "put",
+    method: "delete",
     request: {
       params: {
         "subscriptionId": SUBSCRIPTION_ID_EXPECTED,
@@ -137,7 +137,8 @@ Scenarios.Azure_ResourceManager_Resources_Lro_delete = passOnSuccess([
     response: {
       status: 202,
       headers: {
-        Location: `/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/delete`,
+        "Location": `/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/delete`,
+        "Azure-AsyncOperation": `/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/delete`,
       },
     },
     handler: (req: MockRequest) => {
@@ -145,7 +146,8 @@ Scenarios.Azure_ResourceManager_Resources_Lro_delete = passOnSuccess([
       return {
         status: 202,
         headers: {
-          Location: `${req.baseUrl}/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/delete`,
+          "Location": `${req.baseUrl}/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/delete`,
+          "Azure-AsyncOperation": `${req.baseUrl}/subscriptions/${SUBSCRIPTION_ID_EXPECTED}/resourceGroups/${RESOURCE_GROUP_EXPECTED}/operations/delete`,
         },
         body: json({ id: "delete", status: "InProgress" }),
       };
@@ -153,7 +155,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_delete = passOnSuccess([
     kind: "MockApiDefinition",
   },
   {
-    uri: "/subscriptions/:subscriptionId/resourceGroups/:resourceGroup/providers/operations/delete",
+    uri: "/subscriptions/:subscriptionId/resourceGroups/:resourceGroup/operations/delete",
     method: "get",
     request: {
       params: {
@@ -167,14 +169,7 @@ Scenarios.Azure_ResourceManager_Resources_Lro_delete = passOnSuccess([
     },
     handler: (req: MockRequest) => {
       const response =
-        deletePollCount > 0
-          ? {
-              status: 202,
-              body: json({ id: "delete", status: "InProgress" }),
-            }
-          : {
-              status: 204,
-            };
+        deletePollCount > 0 ? { status: 204 } : { status: 202, body: json({ id: "delete", status: "InProgress" }) };
       deletePollCount += 1;
 
       return response;

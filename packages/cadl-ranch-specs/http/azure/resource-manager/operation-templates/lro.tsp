@@ -26,7 +26,7 @@ interface Lro {
   @scenario
   @scenarioDoc("""
     Resource PUT operation.
-    final-state-via: location
+    final-state-via: Azure-AsyncOperation
     
     Expected verb: PUT
     Expected path: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.OperationTemplates/lroResources/lro
@@ -42,7 +42,7 @@ interface Lro {
     ```
     
     Expected status code: 201
-    Expected response header: Location={endpoint}/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/operations/create_or_replace
+    Expected response header: Azure-AsyncOperation={endpoint}/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/operations/create_or_replace
     
     Expected response body:
     ```json
@@ -116,25 +116,22 @@ interface Lro {
       }
     }
     """)
-  createOrReplace is ArmResourceCreateOrReplaceAsync<
-    LroResource,
-    LroHeaders = ArmLroLocationHeader & Azure.Core.Foundations.RetryAfterHeader
-  >;
+  createOrReplace is ArmResourceCreateOrReplaceAsync<LroResource>;
 
   #suppress "deprecated" "legacy"
   #suppress "@azure-tools/typespec-azure-resource-manager/lro-location-header" "legacy"
   @scenario
   @scenarioDoc("""
     Resource DELETE operation.
-    Service returns both Location and Azure-Async-Operation header.
-    final-state-via: azure-async-operation
+    Service returns both Location and Azure-AsyncOperation header.
+    final-state-via: location
     
     Expected verb: DELETE
     Expected path: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.OperationTemplates/lroResources/lro
     Expected query parameter: api-version=2023-12-01-preview
     Expected response status code: 202
     Expected response headers: 
-      - Azure-Async-Operation={endpoint}/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/operations/delete
+      - Azure-AsyncOperation={endpoint}/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/operations/delete
       - Location={endpoint}/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/operations/delete
     Expected response body:
     ```json
@@ -161,9 +158,9 @@ interface Lro {
     
     Expected status code: 204
     """)
-  @useFinalStateVia("azure-async-operation")
+  @useFinalStateVia("location")
   delete is ArmResourceDeleteWithoutOkAsync<
     LroResource,
-    LroHeaders = Azure.Core.Foundations.RetryAfterHeader & ArmCombinedLroHeaders
+    LroHeaders = ArmCombinedLroHeaders & Azure.Core.Foundations.RetryAfterHeader
   >;
 }
